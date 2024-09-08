@@ -1,7 +1,7 @@
 import { Grid, Input, Typography, Button } from "@mui/material";
 import { useEffect, useState } from "react";
 
-const Userform = ({ addUser,submitted ,data}) => {
+const Userform = ({ addUser,updateUser, submitted ,data,isEdit}) => {
 
   const [id, setID] = useState(0);
   const [name, setName] = useState("");
@@ -19,9 +19,10 @@ const Userform = ({ addUser,submitted ,data}) => {
 
     useEffect(()=>{
         if( data?.id && data.id!==0){
-          
+          setID(data.id);
+          setName(data.name);
         }
-    })
+    },[data])
   return (
     <Grid
       container
@@ -97,9 +98,11 @@ const Userform = ({ addUser,submitted ,data}) => {
               backgroundColor: '#00c6e6',
             }
           }}
-          onClick={handleAddUser} // Use a function reference here
+          onClick={()=> isEdit ? updateUser({id,name}): addUser({id,name})} 
         >
-          Add
+        {
+          isEdit ?"update":"Add"
+        }
         </Button>
       </Grid>
     </Grid>

@@ -62,6 +62,20 @@ const Users=()=>{
         });
     }
 
+    const deleteUser=(data)=>{
+     
+       
+        Axios.post('http://localhost:3001/api/deleteuser',data)
+        .then(()=>{
+            getUsers();
+            
+            
+        })
+        .catch(error=>{
+            console.log("axios error:",error);
+        });
+    }
+
     return(
         <Box
             sx={{
@@ -73,16 +87,19 @@ const Users=()=>{
         >
         <Userform
         addUser={addUser}
+        updateUser={updateUser}
         submitted={submitted}
         data={selectedUser}
+        isEdit={isEdit}
         />
         <Usertable 
         rows={users}
         selectedUser={data=>{
         setSelectedUser(data);
-        isEdit(true);
+        setIsEdit(true);
 
         }}
+        deleteUser={data=>window.confirm("Are You Sure?")&& deleteUser(data)}
         />
         </Box>
     );
