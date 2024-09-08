@@ -9,6 +9,8 @@ import { useEffect, useState } from "react";
 const Users=()=>{
     const [users,setUsers]=useState([]);
     const [submitted,setSubmitted]=useState(false);
+    const [selectedUser,setSelectedUser]=useState({});
+    const [isEdit,setIsEdit]=useState(false);
 
     useEffect(()=>{
         getUsers();
@@ -33,13 +35,33 @@ const Users=()=>{
         Axios.post('http://localhost:3001/api/createuser',payload)
         .then(()=>{
             getUsers();
-            setSubmitted(false)
+            setSubmitted(false);
+            isEdit(false);
             
         })
         .catch(error=>{
             console.log("axios error:",error);
         });
     }
+
+    const updateUser=(data)=>{
+        setSubmitted(true);
+        const payload={
+            id:data.id,
+            name:data.name,
+        }
+        Axios.post('http://localhost:3001/api/updateuser',payload)
+        .then(()=>{
+            getUsers();
+            setSubmitted(false);
+            isEdit(false);
+            
+        })
+        .catch(error=>{
+            console.log("axios error:",error);
+        });
+    }
+
     return(
         <Box
             sx={{
@@ -52,8 +74,16 @@ const Users=()=>{
         <Userform
         addUser={addUser}
         submitted={submitted}
+        data={selectedUser}
         />
-        <Usertable rows={users}/>
+        <Usertable 
+        rows={users}
+        selectedUser={data=>{
+        setSelectedUser(data);
+        isEdit(true);
+
+        }}
+        />
         </Box>
     );
 }
